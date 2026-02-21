@@ -1,0 +1,21 @@
+{
+    "name": "Alantrix.UI",
+    "rootNamespace": "",
+    "references": [
+        "GUID:a481c7e6ca1f09941bf78e5e087d8f00"
+    ],
+    "includePlatforms": [],
+    "excludePlatforms": [
+        "Android",
+        "iOS",
+        "WindowsStandalone32",
+        "WindowsStandalone64"
+    ],
+    "allowUnsafeCode": false,
+    "overrideReferences": false,
+    "precompiledReferences": [],
+    "autoReferenced": true,
+    "defineConstraints": [],
+    "versionDefines": [],
+    "noEngineReferences": false
+}

@@ -1,14 +1,25 @@
-public class GameplayManager : Sora.Managers.Singleton<GameplayManager>
+using Sora.Variables;
+using UnityEngine;
+
+namespace Alantrix.Gameplay
 {
-    // Start is called before the first frame update
-    void Start()
+    public class GameplayManager : Sora.Managers.Singleton<GameplayManager>
     {
+        [SerializeField] private Vector2Variable gridSize;
 
-    }
+        private void Awake()
+        {
 
-    // Update is called once per frame
-    void Update()
-    {
+        }
 
+        private void Start()
+        {
+            CardManager.instance.DealCards(gridSize.value);
+        }
+
+        public void OnPressingPlay()
+        {
+
+        }
     }
 }

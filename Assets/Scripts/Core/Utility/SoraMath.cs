@@ -5,8 +5,10 @@
 // This script is covered by a Non-Disclosure Agreement (NDA) and is Confidential.
 // Destroy the file immediately if you have not been explicitly granted access.
 
-namespace Sora.Math 
-{ 
+using System.Collections.Generic;
+
+namespace Sora.Math
+{
     public static class SoraMath
     {
         /// <summary>
@@ -95,6 +97,19 @@ namespace Sora.Math
             if (value <= epsilon && value >= -epsilon)
                 return true;
             return false;
+        }
+
+        /// <summary>
+        /// Used for shuffling the order of values in a list
+        /// </summary>
+        /// <param name="list"> the list that needs to shuffled </param>
+        public static void Shuffle<T>(this IList<T> list)
+        {
+            for (int i = list.Count - 1; i > 0; i--)
+            {
+                int randomIndex = UnityEngine.Random.Range(0, i + 1);
+                (list[i], list[randomIndex]) = (list[randomIndex], list[i]);
+            }
         }
     }
 }

@@ -5,6 +5,8 @@ public class CardAnimator : MonoBehaviour
     private const string flipToFrontAnimation = "flipToFront";
     private const string flipToBackAnimation = "flipToBack";
     private const string hoverAnimation = "hover";
+    private const string idleTrigger = "returnToIdle";
+
 
     private Animator animator;
 
@@ -23,9 +25,16 @@ public class CardAnimator : MonoBehaviour
         animator.Play(flipToBackAnimation, 0);
     }
 
-    internal void HoverOverCard()
+    internal void HoverOverCard(bool stop)
     {
-        animator.Play(hoverAnimation, 0);
+        if (!stop)
+            animator.Play(hoverAnimation, 0);
+        else
+            animator.SetTrigger(idleTrigger);
+    }
 
+    internal void StopAnimations()
+    {
+        animator.Play("idle");
     }
 }
