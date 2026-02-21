@@ -1,15 +1,19 @@
 
 using Alantrix.Gameplay.Card;
 using Sora.Math;
+using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
+
 namespace Alantrix.Gameplay
 {
     public class CardManager : Sora.Managers.Singleton<CardManager>
     {
         [SerializeField] private PlayingCard[] AvailableCards;
         [SerializeField] private GameObject playArea;
+        [SerializeField] private float delayBeforeHidingCards;
+        [SerializeField] private float cardSettleDelay;
         internal Color greyedColor = new Color(0.8f, 0.8f, 0.8f);
 
         private Dictionary<int, PlayingCard> selectedCards = new Dictionary<int, PlayingCard>();
@@ -17,6 +21,8 @@ namespace Alantrix.Gameplay
 
         private Vector2 playAreaSize;
         private const int gridSpacing = 50;
+        private Match match = new Match();
+        private int previousMatch;
 
         private void OnEnable()
         {
@@ -55,14 +61,28 @@ namespace Alantrix.Gameplay
                 deck.Add(AvailableCards[index]);
             }
 
-            SoraMath.Shuffle(deck);
+            deck.Shuffle();
+            List<PlayingCard> cards = new List<PlayingCard>();
             foreach (PlayingCard pc in deck)
             {
-                Instantiate(pc, playArea.transform);
+                cards.Add(Instantiate(pc, playArea.transform));
             }
+            StartCoroutine(HideCardsAfterDealing(cards));
         }
 
-        Match match = new Match();
+        private IEnumerator HideCardsAfterDealing(List<PlayingCard> deck)
+        {
+            yield return new WaitForSeconds(delayBeforeHidingCards);
+            // shuffling for a little randomized animation
+            deck.Shuffle();
+            foreach (PlayingCard pc in deck)
+            {
+                pc.FlipDealtCard();
+                yield return new WaitForSeconds(0.1f);
+            }
+
+        }
+
         internal void OnCardSelected(PlayingCard card)
         {
             selectedCards.Add(currentClickIndex, card);
@@ -72,6 +92,8 @@ namespace Alantrix.Gameplay
                 match = new Match();
                 Debug.Log("New Match created");
             }
+
+            currentClickIndex++;
 
             if (match.card1 == null)
             {
@@ -86,19 +108,44 @@ namespace Alantrix.Gameplay
 
                 if (match.isAMatch())
                 {
-                    match.card1.MatchFound();
-                    match.card2.MatchFound();
+                    Debug.Log("Match found");
+
+                    if (previousMatch - currentClickIndex == 2)
+                    {
+                        ScoreManager.instance.UpComboCounter();
+                    }
+                    else
+                    {
+                        ScoreManager.instance.ResetComboCounter();
+                    }
+                    previousMatch = currentClickIndex;
+                    StartCoroutine(MatchCards(match.card1, match.card2));
+                    ScoreManager.instance.AddMatchScore();
                 }
                 else
                 {
-                    match.card1 = match.card2;
-                    currentClickIndex--;
+                    Debug.Log("Match not found, flipping cards back");
+                    StartCoroutine(FlipBackCards(match.card1, match.card2));
                 }
             }
 
-            currentClickIndex++;
             Debug.Log("CurrentClick: " + currentClickIndex);
+        }
 
+        private IEnumerator FlipBackCards(PlayingCard card1, PlayingCard card2)
+        {
+            yield return new WaitForSeconds(cardSettleDelay);
+            card1.MatchNotFound();
+            card2.MatchNotFound();
+        }
+
+        private IEnumerator MatchCards(PlayingCard card1, PlayingCard card2)
+        {
+            yield return new WaitForSeconds(cardSettleDelay);
+
+            card1.MatchFound();
+            card2.MatchFound();
         }
     }
+
 }

@@ -9,10 +9,6 @@ MonoBehaviour:
   m_GameObject: {fileID: 0}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 8a01f922374c37d49b69e18c5dc448ac, type: 3}
-  m_Name: so_gridSize
+  m_Script: {fileID: 11500000, guid: 748791f4b4960c545a13dc7a24c24ae3, type: 3}
+  m_Name: so_updateScore
   m_EditorClassIdentifier: 
-  value: {x: 4, y: 3}
-  description: The size of the grid that the cards will spawn in
-  resetValue: 0
-  defaultValue: {x: 4, y: 3}

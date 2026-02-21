@@ -43,14 +43,15 @@ namespace Alantrix.Gameplay.Card
         internal CardState state;
         private bool isFlipped;
 
+        private void Awake()
+        {
+            cardAnimator = GetComponent<CardAnimator>();
+        }
+
         private void OnEnable()
         {
-            state = CardState.IDLE;
-
             button = GetComponentInChildren<Button>();
             button.onClick.AddListener(OnCardSelected);
-
-            cardAnimator = GetComponent<CardAnimator>();
         }
 
         public void OnPointerEnter(PointerEventData eventData)
@@ -59,6 +60,7 @@ namespace Alantrix.Gameplay.Card
             // this therefore only works on PC/Mac
             if (state == CardState.IDLE)
             {
+                Debug.Log("Hovering over card", this);
                 cardAnimator.HoverOverCard(false);
                 state = CardState.HOVERING;
             }
@@ -70,6 +72,8 @@ namespace Alantrix.Gameplay.Card
             // this therefore only works on PC/Mac
             if (state == CardState.HOVERING)
             {
+                Debug.Log("Stop hover", this);
+
                 cardAnimator.HoverOverCard(true);
                 state = CardState.IDLE;
             }
@@ -77,17 +81,31 @@ namespace Alantrix.Gameplay.Card
 
         private void OnCardSelected()
         {
-            if (state != CardState.FLIPPED)
+            if (state != CardState.FLIPPED || state != CardState.FOUND)
             {
                 cardAnimator.FlipCardToFront();
-                CardManager.instance.OnCardSelected(this);
                 state = CardState.FLIPPED;
+                CardManager.instance.OnCardSelected(this);
             }
         }
 
         internal void MatchFound()
         {
+            state = CardState.FOUND;
             cardFace.color = CardManager.instance.greyedColor;
+        }
+
+        internal void MatchNotFound()
+        {
+            Debug.Log("Flipping card to idle", this.gameObject);
+            cardAnimator.FlipCardToBack();
+            state = CardState.IDLE;
+        }
+
+        internal void FlipDealtCard()
+        {
+            cardAnimator.FlipCardToBack();
+            state = CardState.IDLE;
         }
     }
 }

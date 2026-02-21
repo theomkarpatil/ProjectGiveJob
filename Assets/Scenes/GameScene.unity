@@ -183,6 +183,8 @@ MonoBehaviour:
   - {fileID: 4989852958193448078, guid: 9b07e4e0fb5480343a68974cb0727039, type: 3}
   - {fileID: 4989852958193448078, guid: 3af9039d65dad634a8cd8b526db266c4, type: 3}
   playArea: {fileID: 1550708207}
+  delayBeforeHidingCards: 1.25
+  cardSettleDelay: 1.5
 --- !u!1 &142595357
 GameObject:
   m_ObjectHideFlags: 0
@@ -716,6 +718,7 @@ GameObject:
   m_Component:
   - component: {fileID: 1155490442}
   - component: {fileID: 1155490443}
+  - component: {fileID: 1155490444}
   m_Layer: 0
   m_Name: GameplayManager
   m_TagString: Untagged
@@ -751,6 +754,21 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   gridSize: {fileID: 11400000, guid: b78e1b52d44396a49aab69d20927c75b, type: 2}
+--- !u!114 &1155490444
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1155490441}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 26ea3ef60201667468aa444fb0ec2ea5, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  updateScore: {fileID: 11400000, guid: 48666d6baa8982d43937056247500545, type: 2}
+  matchScore: 20
+  comboMultiplier: 4
 --- !u!1 &1550708207
 GameObject:
   m_ObjectHideFlags: 0
