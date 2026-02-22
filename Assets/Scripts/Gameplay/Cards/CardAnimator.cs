@@ -18,11 +18,13 @@ public class CardAnimator : MonoBehaviour
     internal void FlipCardToFront()
     {
         animator.Play(flipToFrontAnimation, 0);
+        AudioManager.instance.PlayCardFlipAudio(true);
     }
 
     internal void FlipCardToBack()
     {
         animator.Play(flipToBackAnimation, 0);
+        AudioManager.instance.PlayCardFlipAudio(false);
     }
 
     internal void HoverOverCard(bool stop)

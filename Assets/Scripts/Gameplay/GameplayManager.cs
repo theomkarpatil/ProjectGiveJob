@@ -7,9 +7,11 @@ namespace Alantrix.Gameplay
     {
         [SerializeField] internal Vector2Variable gridSize;
         [SerializeField] private Sora.Events.SoraEvent gameEnd;
+        [SerializeField] private Sora.Events.SoraEvent requestGameSave;
 
         [SerializeField] Sora.Events.SoraEvent loadLastSavedGame;
         [SerializeField] private BoolVariable loadGame;
+        [SerializeField] private BoolVariable autoSave;
 
         internal bool gameStarted;
         internal int matchesFound;
@@ -33,10 +35,18 @@ namespace Alantrix.Gameplay
             {
                 GameEnd();
             }
+            else
+            {
+                if (autoSave.value)
+                {
+                    requestGameSave.InvokeEvent();
+                }
+            }
         }
 
         private void GameEnd()
         {
+            AudioManager.instance.PlayGameOverAudio();
             gameEnd.InvokeEvent(this, ScoreManager.instance.GetScore());
         }
 

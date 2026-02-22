@@ -98,11 +98,15 @@ namespace Alantrix.Gameplay.Card
         {
             state = CardState.FOUND;
             cardFace.color = CardManager.instance.greyedColor;
+
+            AudioManager.instance.PlayMatchFoundAudio();
         }
 
         internal void MatchNotFound()
         {
             Debug.Log("Flipping card to idle", this.gameObject);
+            AudioManager.instance.PlayMatchFailedAudio();
+
             cardAnimator.FlipCardToBack();
             state = CardState.IDLE;
         }
@@ -110,12 +114,15 @@ namespace Alantrix.Gameplay.Card
         internal void FlipDealtCard()
         {
             cardAnimator.FlipCardToBack();
+
             state = CardState.IDLE;
         }
 
         internal void ShowDealtCard()
         {
             cardAnimator.FlipCardToFront();
+            AudioManager.instance.PlayCardFlipAudio(true);
+
             GetComponentInChildren<Button>().interactable = false;
         }
     }

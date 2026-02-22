@@ -24,6 +24,7 @@ namespace Alantrix.Gameplay
     public class SaveLoadManager : Sora.Managers.Singleton<SaveLoadManager>
     {
         [SerializeField] private Vector2Variable gridSize;
+        [SerializeField] private BoolVariable autoSave;
         [SerializeField] private Sora.Events.SoraEvent requestSave;
 
         private const string savedFileName = "matchSave.json";
@@ -90,6 +91,11 @@ namespace Alantrix.Gameplay
             }
 
             CardManager.instance.DealCards(new Vector2(saveData.columns, saveData.rows), loadedCards.ToArray(), cardStates);
+        }
+
+        public void ToggleAutoSave(bool autoSave)
+        {
+            this.autoSave.value = autoSave;
         }
     }
 }

@@ -2076,8 +2076,10 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   gridSize: {fileID: 11400000, guid: b78e1b52d44396a49aab69d20927c75b, type: 2}
   gameEnd: {fileID: 11400000, guid: ccce252feb6e920459b6da940c002c3b, type: 2}
+  requestGameSave: {fileID: 11400000, guid: bb40c99e6cd0e4c4c8f8c634677b55ed, type: 2}
   loadLastSavedGame: {fileID: 11400000, guid: 784941b669022af41b63e40fcda2d872, type: 2}
   loadGame: {fileID: 11400000, guid: 0057f487ab3edf0429dab46552debfc4, type: 2}
+  autoSave: {fileID: 11400000, guid: e19396b910dc5cc469abf29972892874, type: 2}
 --- !u!114 &1155490444
 MonoBehaviour:
   m_ObjectHideFlags: 0
