@@ -18,6 +18,8 @@ namespace Alantrix.Gameplay
     {
         public int columns;
         public int rows;
+        public int score;
+        public int turns;
         public List<PlayingCardSaveData> cards;
     }
 
@@ -42,6 +44,8 @@ namespace Alantrix.Gameplay
 
             saveData.columns = (int)gridSize.value.x;
             saveData.rows = (int)gridSize.value.y;
+            saveData.score = ScoreManager.instance.GetScore();
+            saveData.turns = ScoreManager.instance.GetTurns();
 
             saveData.cards = new List<PlayingCardSaveData>();
             foreach (var card in dealtCards)
@@ -91,6 +95,9 @@ namespace Alantrix.Gameplay
             }
 
             CardManager.instance.DealCards(new Vector2(saveData.columns, saveData.rows), loadedCards.ToArray(), cardStates);
+
+            ScoreManager.instance.AddScore(saveData.score);
+            ScoreManager.instance.SetTurns(saveData.turns);
         }
 
         public void ToggleAutoSave(bool autoSave)

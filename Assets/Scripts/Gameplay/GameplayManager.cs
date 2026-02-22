@@ -1,4 +1,5 @@
 using Sora.Variables;
+using System.Collections;
 using UnityEngine;
 
 namespace Alantrix.Gameplay
@@ -33,7 +34,7 @@ namespace Alantrix.Gameplay
         {
             if (matchesFound == (gridSize.value.x * gridSize.value.y) / 2)
             {
-                GameEnd();
+                StartCoroutine(GameEnd());
             }
             else
             {
@@ -44,8 +45,9 @@ namespace Alantrix.Gameplay
             }
         }
 
-        private void GameEnd()
+        private IEnumerator GameEnd()
         {
+            yield return new WaitForSeconds(2.0f);
             AudioManager.instance.PlayGameOverAudio();
             gameEnd.InvokeEvent(this, ScoreManager.instance.GetScore());
         }

@@ -38,6 +38,7 @@ namespace Alantrix.Gameplay
             Random.InitState((int)System.DateTime.Now.Ticks);
         }
 
+        #region Card Dealing logic
         private void EvaluatePlayAreaMetrics(Vector2 gridSize)
         {
             GridLayoutGroup grid = playArea.GetComponent<GridLayoutGroup>();
@@ -137,6 +138,8 @@ namespace Alantrix.Gameplay
                 {
                     card.MatchFound();
                 }
+
+
             }
         }
 
@@ -167,6 +170,9 @@ namespace Alantrix.Gameplay
             GameplayManager.instance.gameStarted = true;
         }
 
+        #endregion
+
+        #region Card Play Logic
         internal void OnCardSelected(PlayingCard card)
         {
             selectedCards.Add(currentClickIndex, card);
@@ -202,7 +208,8 @@ namespace Alantrix.Gameplay
                     }
 
                     previousMatch = currentClickIndex;
-                    StartCoroutine(MatchCards(match.card1, match.card2));
+                    Match currentMatch = match;
+                    StartCoroutine(MatchCards(currentMatch.card1, currentMatch.card2));
                     ScoreManager.instance.AddMatchScore();
 
                     GameplayManager.instance.CheckForGameEnd();
@@ -212,7 +219,8 @@ namespace Alantrix.Gameplay
                     ScoreManager.instance.ResetComboCounter();
 
                     Debug.Log("Match not found, flipping cards back");
-                    StartCoroutine(FlipBackCards(match.card1, match.card2));
+                    Match currentMatch = match;
+                    StartCoroutine(FlipBackCards(currentMatch.card1, currentMatch.card2));
                 }
             }
 
@@ -233,11 +241,11 @@ namespace Alantrix.Gameplay
             card1.MatchFound();
             card2.MatchFound();
         }
+        #endregion
 
         public List<PlayingCard> GetDealtCards()
         {
             return dealtCards;
         }
-
     }
 }

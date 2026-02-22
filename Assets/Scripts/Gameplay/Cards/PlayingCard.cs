@@ -89,7 +89,6 @@ namespace Alantrix.Gameplay.Card
             if (state != CardState.FLIPPED || state != CardState.FOUND)
             {
                 cardAnimator.FlipCardToFront();
-                state = CardState.FLIPPED;
                 CardManager.instance.OnCardSelected(this);
             }
         }
@@ -108,14 +107,11 @@ namespace Alantrix.Gameplay.Card
             AudioManager.instance.PlayMatchFailedAudio();
 
             cardAnimator.FlipCardToBack();
-            state = CardState.IDLE;
         }
 
         internal void FlipDealtCard()
         {
             cardAnimator.FlipCardToBack();
-
-            state = CardState.IDLE;
         }
 
         internal void ShowDealtCard()

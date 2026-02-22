@@ -42,6 +42,12 @@ namespace Alantrix.Gameplay
             updateTurns.InvokeEvent(this, turns);
         }
 
+        public void SetTurns(int turns)
+        {
+            this.turns = turns;
+            updateTurns.InvokeEvent(this, this.turns);
+        }
+
         public void UpComboCounter()
         {
             comboCounter++;
@@ -65,6 +71,11 @@ namespace Alantrix.Gameplay
         public int GetScore()
         {
             return score;
+        }
+
+        public int GetTurns()
+        {
+            return turns;
         }
     }
 }

@@ -23,6 +23,7 @@ namespace Alantrix.UI
         private void OnEnable()
         {
             string path = Path.Combine(Application.persistentDataPath, savedFileName);
+            loadGame.value = false;
 
             if (!File.Exists(path))
             {
