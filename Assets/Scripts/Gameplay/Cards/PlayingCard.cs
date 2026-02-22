@@ -56,6 +56,9 @@ namespace Alantrix.Gameplay.Card
 
         public void OnPointerEnter(PointerEventData eventData)
         {
+            if (!GameplayManager.instance.gameStarted)
+                return;
+
             // starts hovering when mouse pointer hovers over the card
             // this therefore only works on PC/Mac
             if (state == CardState.IDLE)
@@ -68,6 +71,9 @@ namespace Alantrix.Gameplay.Card
 
         public void OnPointerExit(PointerEventData eventData)
         {
+            if (!GameplayManager.instance.gameStarted)
+                return;
+
             // stop hovering when mouse pointer exits the card rect
             // this therefore only works on PC/Mac
             if (state == CardState.HOVERING)

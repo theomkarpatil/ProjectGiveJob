@@ -12,8 +12,11 @@ namespace Alantrix.Gameplay
     {
         [SerializeField] private PlayingCard[] AvailableCards;
         [SerializeField] private GameObject playArea;
+        [Tooltip("Delay after which cards flip back after being dealt")]
         [SerializeField] private float delayBeforeHidingCards;
-        [SerializeField] private float cardSettleDelay;
+        [Tooltip("Delay after which cards flip after a match test")]
+        [SerializeField] private float cardFlipDelay;
+
         internal Color greyedColor = new Color(0.8f, 0.8f, 0.8f);
 
         private Dictionary<int, PlayingCard> selectedCards = new Dictionary<int, PlayingCard>();
@@ -21,6 +24,7 @@ namespace Alantrix.Gameplay
 
         private Vector2 playAreaSize;
         private const int gridSpacing = 50;
+
         private Match match = new Match();
         private int previousMatch;
 
@@ -92,6 +96,8 @@ namespace Alantrix.Gameplay
                 pc.GetComponentInChildren<Button>().interactable = true;
                 yield return new WaitForSeconds(0.1f);
             }
+
+            GameplayManager.instance.gameStarted = true;
         }
 
         internal void OnCardSelected(PlayingCard card)
@@ -116,25 +122,25 @@ namespace Alantrix.Gameplay
                 match.card2 = card;
                 Debug.Log("Card 2 added to match");
                 match.Display();
+                ScoreManager.instance.UpdateTurns();
 
                 if (match.isAMatch())
                 {
                     Debug.Log("Match found");
 
-                    if (previousMatch - currentClickIndex == 2)
+                    if (currentClickIndex - previousMatch == 2)
                     {
                         ScoreManager.instance.UpComboCounter();
                     }
-                    else
-                    {
-                        ScoreManager.instance.ResetComboCounter();
-                    }
+
                     previousMatch = currentClickIndex;
                     StartCoroutine(MatchCards(match.card1, match.card2));
                     ScoreManager.instance.AddMatchScore();
                 }
                 else
                 {
+                    ScoreManager.instance.ResetComboCounter();
+
                     Debug.Log("Match not found, flipping cards back");
                     StartCoroutine(FlipBackCards(match.card1, match.card2));
                 }
@@ -145,14 +151,14 @@ namespace Alantrix.Gameplay
 
         private IEnumerator FlipBackCards(PlayingCard card1, PlayingCard card2)
         {
-            yield return new WaitForSeconds(cardSettleDelay);
+            yield return new WaitForSeconds(cardFlipDelay);
             card1.MatchNotFound();
             card2.MatchNotFound();
         }
 
         private IEnumerator MatchCards(PlayingCard card1, PlayingCard card2)
         {
-            yield return new WaitForSeconds(cardSettleDelay);
+            yield return new WaitForSeconds(cardFlipDelay);
 
             card1.MatchFound();
             card2.MatchFound();

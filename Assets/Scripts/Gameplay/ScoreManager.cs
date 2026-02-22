@@ -1,27 +1,30 @@
+using System;
 using UnityEngine;
 
 public class ScoreManager : Sora.Managers.Singleton<ScoreManager>
 
 {
     [SerializeField] private Sora.Events.SoraEvent updateScore;
+    [SerializeField] private Sora.Events.SoraEvent updateTurns;
+    [SerializeField] private Sora.Events.SoraEvent updateCombo;
     [SerializeField] private int matchScore;
     [SerializeField] private int comboMultiplier;
 
+    private int turns;
     private int comboCounter;
-
     private int score;
 
     private void OnEnable()
     {
         score = 0;
-        comboCounter = 1;
+        turns = 0;
+        comboCounter = 0;
     }
 
     public void AddMatchScore()
     {
-        score += matchScore;
+        AddScore(matchScore);
         Debug.Log($"MatchScore added. Score = {score}");
-
     }
 
     public void AddScore(int score)
@@ -29,6 +32,12 @@ public class ScoreManager : Sora.Managers.Singleton<ScoreManager>
         this.score += score;
         Debug.Log($"Score {score} added. Score = {this.score}");
         updateScore.InvokeEvent(this, this.score);
+    }
+
+    public void UpdateTurns()
+    {
+        turns++;
+        updateTurns.InvokeEvent(this, turns);
     }
 
     public void UpComboCounter()
@@ -39,13 +48,16 @@ public class ScoreManager : Sora.Managers.Singleton<ScoreManager>
 
     public void ResetComboCounter()
     {
-        if (comboCounter > 2)
+        if (comboCounter >= 2)
         {
             int score = comboCounter * comboMultiplier * matchScore;
-            Debug.Log("Adding combo score: " + score);
+            Debug.Log($"Combo counter: {comboCounter}. Adding combo score: {score}");
             AddScore(score);
+            Tuple<int, int> combo = new Tuple<int, int>(score, comboCounter);
+            updateCombo.InvokeEvent(this, combo);
         }
-        comboCounter = 1;
+        Debug.Log("Resetting combo counter");
+        comboCounter = 0;
     }
 
     public int GetScore()
