@@ -5,8 +5,12 @@ namespace Alantrix.Gameplay
 {
     public class GameplayManager : Sora.Managers.Singleton<GameplayManager>
     {
-        [SerializeField] private Vector2Variable gridSize;
+        [SerializeField] internal Vector2Variable gridSize;
         [SerializeField] private Sora.Events.SoraEvent gameEnd;
+
+        [SerializeField] Sora.Events.SoraEvent loadLastSavedGame;
+        [SerializeField] private BoolVariable loadGame;
+
         internal bool gameStarted;
         internal int matchesFound;
 
@@ -17,12 +21,10 @@ namespace Alantrix.Gameplay
 
         private void Start()
         {
-            CardManager.instance.DealCards(gridSize.value);
-        }
-
-        public void OnPressingPlay()
-        {
-
+            if (!loadGame.value)
+                CardManager.instance.DealCards(gridSize.value);
+            else
+                loadLastSavedGame.InvokeEvent();
         }
 
         public void CheckForGameEnd()
@@ -37,5 +39,7 @@ namespace Alantrix.Gameplay
         {
             gameEnd.InvokeEvent(this, ScoreManager.instance.GetScore());
         }
+
+
     }
 }

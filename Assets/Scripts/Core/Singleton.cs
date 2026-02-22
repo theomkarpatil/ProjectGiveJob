@@ -5,8 +5,6 @@
 // This script is covered by a Non-Disclosure Agreement (NDA) and is Confidential.
 // Destroy the file immediately if you have not been explicitly granted access.
 
-using System.Collections;
-using System.Collections.Generic;
 using UnityEngine;
 
 namespace Sora.Managers
@@ -35,13 +33,19 @@ namespace Sora.Managers
             }
         }
 
-        private void Awake()
+        protected void Awake()
         {
-            if (_instance != null && _instance != this)
-                Destroy(this);
+            if (_instance == null)
+            {
+                _instance = this as T;
+            }
+            else if (_instance != this)
+            {
+                Destroy(gameObject);
+            }
         }
 
-        private void OnDestroy()
+        protected void OnDestroy()
         {
             if (_instance == this)
                 _instance = null;

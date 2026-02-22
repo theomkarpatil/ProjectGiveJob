@@ -10,7 +10,7 @@ namespace Alantrix.Gameplay
 {
     public class CardManager : Sora.Managers.Singleton<CardManager>
     {
-        [SerializeField] private PlayingCard[] AvailableCards;
+        public PlayingCard[] AvailableCards;
         [SerializeField] private GameObject playArea;
         [Tooltip("Delay after which cards flip back after being dealt")]
         [SerializeField] private float delayBeforeHidingCards;
@@ -20,6 +20,8 @@ namespace Alantrix.Gameplay
         internal Color greyedColor = new Color(0.8f, 0.8f, 0.8f);
 
         private Dictionary<int, PlayingCard> selectedCards = new Dictionary<int, PlayingCard>();
+        private List<PlayingCard> dealtCards = new List<PlayingCard>();
+
         private int currentClickIndex;
 
         private Vector2 playAreaSize;
@@ -36,9 +38,8 @@ namespace Alantrix.Gameplay
             Random.InitState((int)System.DateTime.Now.Ticks);
         }
 
-        internal void DealCards(Vector2 gridSize)
+        private void EvaluatePlayAreaMetrics(Vector2 gridSize)
         {
-            currentClickIndex = 0;
             GridLayoutGroup grid = playArea.GetComponent<GridLayoutGroup>();
             grid.spacing = Vector2.one * gridSpacing;
 
@@ -73,46 +74,90 @@ namespace Alantrix.Gameplay
             }
 
             grid.cellSize = new Vector2(finalWidth, finalHeight);
-
-            int cardCount = (int)gridSize.x * (int)gridSize.y;
-            List<PlayingCard> deck = new List<PlayingCard>();
-
-            // making sure we add half the value of cardCount because we need 2 of each
-            for (int i = 0; i < cardCount / 2; ++i)
-            {
-                int index = Random.Range(0, 8);
-
-                // adding the same instance again to account for matches
-                deck.Add(AvailableCards[index]);
-                deck.Add(AvailableCards[index]);
-            }
-
-            deck.Shuffle();
-            List<PlayingCard> cards = new List<PlayingCard>();
-            foreach (PlayingCard pc in deck)
-            {
-                cards.Add(Instantiate(pc, playArea.transform));
-            }
-            StartCoroutine(ShowCards(cards));
         }
 
-        private IEnumerator ShowCards(List<PlayingCard> deck)
+        public void DealCards(Vector2 gridSize, PlayingCard[] loadedCards = null, List<CardState> cardStates = null)
+        {
+            EvaluatePlayAreaMetrics(gridSize);
+
+            dealtCards = new List<PlayingCard>();
+            currentClickIndex = 0;
+
+            if (loadedCards == null)
+            {
+                int cardCount = (int)gridSize.x * (int)gridSize.y;
+                List<PlayingCard> deck = new List<PlayingCard>();
+
+                // making sure we add half the value of cardCount because we need 2 of each
+                for (int i = 0; i < cardCount / 2; ++i)
+                {
+                    int index = Random.Range(0, 8);
+
+                    // adding the same instance again to account for matches
+                    deck.Add(AvailableCards[index]);
+                    deck.Add(AvailableCards[index]);
+                }
+
+                // shuffle to make sure they aren't placed adjacent to their matches
+                deck.Shuffle();
+                foreach (PlayingCard pc in deck)
+                {
+                    dealtCards.Add(Instantiate(pc, playArea.transform));
+                }
+
+                // shuffling for a little randomized animation
+                // making sure the initial grid of dealtCards remains the same
+
+                dealtCards.Shuffle();
+                StartCoroutine(ShowCards(dealtCards));
+            }
+            else
+            {
+                // need to make a list of cards that haven't been matched yet so that we can flip them.
+                List<PlayingCard> cardsToFlip = new List<PlayingCard>();
+                // and another that need to be revealed
+                List<PlayingCard> cardsToReveal = new List<PlayingCard>();
+
+                for (int i = 0; i < loadedCards.Length; ++i)
+                {
+                    PlayingCard card = Instantiate(loadedCards[i], playArea.transform);
+                    card.state = cardStates[i];
+                    if (card.state == CardState.FOUND)
+                        cardsToReveal.Add(card);
+                    else
+                        cardsToFlip.Add(card);
+
+                    dealtCards.Add(card);
+                }
+
+                StartCoroutine(ShowCards(cardsToFlip));
+                StartCoroutine(ShowCards(cardsToReveal, false));
+
+                foreach (PlayingCard card in cardsToReveal)
+                {
+                    card.MatchFound();
+                }
+            }
+        }
+
+        private IEnumerator ShowCards(List<PlayingCard> dealtCards, bool flip = true)
         {
             yield return new WaitForSeconds(0.5f);
-            // shuffling for a little randomized animation
-            deck.Shuffle();
-            foreach (PlayingCard pc in deck)
+            Debug.Log("Revealing dealt cards");
+            foreach (PlayingCard pc in dealtCards)
             {
                 pc.ShowDealtCard();
             }
 
-            StartCoroutine(HideCardsAfterDealing(deck));
+            if (flip)
+                StartCoroutine(HideCardsAfterDealing(dealtCards));
         }
 
-        private IEnumerator HideCardsAfterDealing(List<PlayingCard> deck)
+        private IEnumerator HideCardsAfterDealing(List<PlayingCard> dealtCards)
         {
             yield return new WaitForSeconds(delayBeforeHidingCards);
-            foreach (PlayingCard pc in deck)
+            Debug.Log("Flipping dealt cards back");
+            foreach (PlayingCard pc in dealtCards)
             {
                 pc.FlipDealtCard();
                 pc.GetComponentInChildren<Button>().interactable = true;
@@ -188,5 +233,11 @@ namespace Alantrix.Gameplay
             card1.MatchFound();
             card2.MatchFound();
         }
+
+        public List<PlayingCard> GetDealtCards()
+        {
+            return dealtCards;
+        }
+
     }
 }

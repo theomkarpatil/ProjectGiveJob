@@ -12,7 +12,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 8a01f922374c37d49b69e18c5dc448ac, type: 3}
   m_Name: so_gridSize
   m_EditorClassIdentifier: 
-  value: {x: 2, y: 5}
+  value: {x: 8, y: 6}
   description: The size of the grid that the cards will spawn in
-  resetValue: 0
+  resetValue: 1
   defaultValue: {x: 4, y: 3}

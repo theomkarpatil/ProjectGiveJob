@@ -10,9 +10,10 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 30405dddfad7ac24a9c1b9072eb731c9, type: 3}
-  m_Name: so_gameStarted
+  m_Name: so_loadGame
   m_EditorClassIdentifier: 
   value: 0
-  description: 'Set to true once all cards are dealt and '
+  description: If Game is being loaded from saved file, this is set to true before
+    switching scenes
   resetToDefault: 1
   defaultValue: 0

@@ -4,7 +4,7 @@ using UnityEngine.UI;
 
 namespace Alantrix.Gameplay.Card
 {
-    internal enum CardState
+    public enum CardState
     {
         IDLE,
         HOVERING,
@@ -33,15 +33,14 @@ namespace Alantrix.Gameplay.Card
 
     public class PlayingCard : MonoBehaviour, IPointerEnterHandler, IPointerExitHandler
     {
-        [SerializeField] internal int index;
-        [SerializeField] private Image cardFace;
+        public int index;
+        public Image cardFace;
 
         private Button button;
         private CardAnimator cardAnimator;
 
         // card state variables
-        internal CardState state;
-        private bool isFlipped;
+        public CardState state;
 
         private void Awake()
         {

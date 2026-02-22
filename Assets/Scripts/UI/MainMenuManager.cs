@@ -1,16 +1,41 @@
+using Sora.Variables;
+using System.IO;
 using TMPro;
 using UnityEngine;
 using UnityEngine.SceneManagement;
+using UnityEngine.UI;
 
 namespace Alantrix.UI
 {
     public class MainMenuManager : MonoBehaviour
     {
+        private const string savedFileName = "matchSave.json";
+
         [SerializeField] private Sora.Variables.Vector2Variable finalizedGrid;
+        [SerializeField] private BoolVariable loadGame;
+
+        [Header("UI Variables")]
         [SerializeField] private TMP_InputField cardGridRowCount;
         [SerializeField] private TMP_InputField cardGridColumnCount;
         [SerializeField] private GameObject cardCountErrorText;
+        [SerializeField] private Button loadGameButton;
 
+        private void OnEnable()
+        {
+            string path = Path.Combine(Application.persistentDataPath, savedFileName);
+
+            if (!File.Exists(path))
+            {
+                loadGameButton.interactable = false;
+                return;
+            }
+        }
+
+        private void LoadGameScene()
+        {
+            SceneManager.LoadSceneAsync(1);
+            gameObject.SetActive(false);
+        }
 
         public void OnPressingPlay()
         {
@@ -27,7 +52,13 @@ namespace Alantrix.UI
                 return;
             }
 
-            finalizedGrid.value = new Vector2(columns, rows);
+            LoadGameScene();
+        }
+
+
+        public void OnPressingLoadLastSaved()
+        {
+            loadGame.value = true;
 
             SceneManager.LoadSceneAsync(1);
             gameObject.SetActive(false);

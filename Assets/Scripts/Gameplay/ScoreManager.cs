@@ -1,67 +1,70 @@
 using System;
 using UnityEngine;
 
-public class ScoreManager : Sora.Managers.Singleton<ScoreManager>
-
+namespace Alantrix.Gameplay
 {
-    [SerializeField] private Sora.Events.SoraEvent updateScore;
-    [SerializeField] private Sora.Events.SoraEvent updateTurns;
-    [SerializeField] private Sora.Events.SoraEvent updateCombo;
-    [SerializeField] private int matchScore;
-    [SerializeField] private int comboMultiplier;
+    public class ScoreManager : Sora.Managers.Singleton<ScoreManager>
 
-    private int turns;
-    private int comboCounter;
-    private int score;
-
-    private void OnEnable()
     {
-        score = 0;
-        turns = 0;
-        comboCounter = 0;
-    }
+        [SerializeField] private Sora.Events.SoraEvent updateScore;
+        [SerializeField] private Sora.Events.SoraEvent updateTurns;
+        [SerializeField] private Sora.Events.SoraEvent updateCombo;
+        [SerializeField] private int matchScore;
+        [SerializeField] private int comboMultiplier;
 
-    public void AddMatchScore()
-    {
-        AddScore(matchScore);
-        Debug.Log($"MatchScore added. Score = {score}");
-    }
+        private int turns;
+        private int comboCounter;
+        private int score;
 
-    public void AddScore(int score)
-    {
-        this.score += score;
-        Debug.Log($"Score {score} added. Score = {this.score}");
-        updateScore.InvokeEvent(this, this.score);
-    }
-
-    public void UpdateTurns()
-    {
-        turns++;
-        updateTurns.InvokeEvent(this, turns);
-    }
-
-    public void UpComboCounter()
-    {
-        comboCounter++;
-        Debug.Log("Combo Counter increased to: " + comboCounter);
-    }
-
-    public void ResetComboCounter()
-    {
-        if (comboCounter >= 2)
+        private void OnEnable()
         {
-            int score = comboCounter * comboMultiplier * matchScore;
-            Debug.Log($"Combo counter: {comboCounter}. Adding combo score: {score}");
-            AddScore(score);
-            Tuple<int, int> combo = new Tuple<int, int>(score, comboCounter);
-            updateCombo.InvokeEvent(this, combo);
+            score = 0;
+            turns = 0;
+            comboCounter = 0;
         }
-        Debug.Log("Resetting combo counter");
-        comboCounter = 0;
-    }
 
-    public int GetScore()
-    {
-        return score;
+        public void AddMatchScore()
+        {
+            AddScore(matchScore);
+            Debug.Log($"MatchScore added. Score = {score}");
+        }
+
+        public void AddScore(int score)
+        {
+            this.score += score;
+            Debug.Log($"Score {score} added. Score = {this.score}");
+            updateScore.InvokeEvent(this, this.score);
+        }
+
+        public void UpdateTurns()
+        {
+            turns++;
+            updateTurns.InvokeEvent(this, turns);
+        }
+
+        public void UpComboCounter()
+        {
+            comboCounter++;
+            Debug.Log("Combo Counter increased to: " + comboCounter);
+        }
+
+        public void ResetComboCounter()
+        {
+            if (comboCounter >= 2)
+            {
+                int score = comboCounter * comboMultiplier * matchScore;
+                Debug.Log($"Combo counter: {comboCounter}. Adding combo score: {score}");
+                AddScore(score);
+                Tuple<int, int> combo = new Tuple<int, int>(score, comboCounter);
+                updateCombo.InvokeEvent(this, combo);
+            }
+            Debug.Log("Resetting combo counter");
+            comboCounter = 0;
+        }
+
+        public int GetScore()
+        {
+            return score;
+        }
     }
 }
