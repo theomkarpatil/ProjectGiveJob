@@ -40,17 +40,39 @@ namespace Alantrix.Gameplay
         {
             currentClickIndex = 0;
             GridLayoutGroup grid = playArea.GetComponent<GridLayoutGroup>();
-
-            grid.constraint = GridLayoutGroup.Constraint.FixedColumnCount;
-            grid.constraintCount = (int)gridSize.x;
-
             grid.spacing = Vector2.one * gridSpacing;
 
-            Vector2 cellSize;
-            //cellSize.x = (playAreaSize.x - ((gridSize.x - 1) * gridSpacing)) / gridSize.x;
-            cellSize.y = (playAreaSize.y - ((gridSize.y - 1) * gridSpacing)) / gridSize.y;
-            cellSize.x = cellSize.y * (5.0f / 7.0f);
-            grid.cellSize = cellSize;
+            int columns = (int)gridSize.x;
+            int rows = (int)gridSize.y;
+
+            grid.constraint = GridLayoutGroup.Constraint.FixedColumnCount;
+            grid.constraintCount = columns;
+
+            float totalSpacingX = (columns - 1) * gridSpacing;
+            float totalSpacingY = (rows - 1) * gridSpacing;
+
+            float maxCellWidth = (playAreaSize.x - totalSpacingX) / columns;
+            float widthBasedHeight = maxCellWidth * (7f / 5f);
+
+            float maxCellHeight = (playAreaSize.y - totalSpacingY) / rows;
+            float heightBasedWidth = maxCellHeight * (5f / 7f);
+
+            float finalWidth;
+            float finalHeight;
+
+            // Check if width-based sizing fits vertically
+            if (widthBasedHeight * rows + totalSpacingY <= playAreaSize.y)
+            {
+                finalWidth = maxCellWidth;
+                finalHeight = widthBasedHeight;
+            }
+            else
+            {
+                finalWidth = heightBasedWidth;
+                finalHeight = maxCellHeight;
+            }
+
+            grid.cellSize = new Vector2(finalWidth, finalHeight);
 
             int cardCount = (int)gridSize.x * (int)gridSize.y;
             List<PlayingCard> deck = new List<PlayingCard>();
@@ -127,6 +149,7 @@ namespace Alantrix.Gameplay
                 if (match.isAMatch())
                 {
                     Debug.Log("Match found");
+                    GameplayManager.instance.matchesFound++;
 
                     if (currentClickIndex - previousMatch == 2)
                     {
@@ -136,6 +159,8 @@ namespace Alantrix.Gameplay
                     previousMatch = currentClickIndex;
                     StartCoroutine(MatchCards(match.card1, match.card2));
                     ScoreManager.instance.AddMatchScore();
+
+                    GameplayManager.instance.CheckForGameEnd();
                 }
                 else
                 {
@@ -164,5 +189,4 @@ namespace Alantrix.Gameplay
             card2.MatchFound();
         }
     }
-
 }

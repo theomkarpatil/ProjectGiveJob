@@ -35,7 +35,7 @@ namespace Alantrix.Gameplay
 
         private void GameEnd()
         {
-            gameEnd.InvokeEvent();
+            gameEnd.InvokeEvent(this, ScoreManager.instance.GetScore());
         }
     }
 }
