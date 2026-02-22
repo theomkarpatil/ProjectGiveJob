@@ -67,20 +67,31 @@ namespace Alantrix.Gameplay
             {
                 cards.Add(Instantiate(pc, playArea.transform));
             }
-            StartCoroutine(HideCardsAfterDealing(cards));
+            StartCoroutine(ShowCards(cards));
+        }
+
+        private IEnumerator ShowCards(List<PlayingCard> deck)
+        {
+            yield return new WaitForSeconds(0.5f);
+            // shuffling for a little randomized animation
+            deck.Shuffle();
+            foreach (PlayingCard pc in deck)
+            {
+                pc.ShowDealtCard();
+            }
+
+            StartCoroutine(HideCardsAfterDealing(deck));
         }
 
         private IEnumerator HideCardsAfterDealing(List<PlayingCard> deck)
         {
             yield return new WaitForSeconds(delayBeforeHidingCards);
-            // shuffling for a little randomized animation
-            deck.Shuffle();
             foreach (PlayingCard pc in deck)
             {
                 pc.FlipDealtCard();
+                pc.GetComponentInChildren<Button>().interactable = true;
                 yield return new WaitForSeconds(0.1f);
             }
-
         }
 
         internal void OnCardSelected(PlayingCard card)

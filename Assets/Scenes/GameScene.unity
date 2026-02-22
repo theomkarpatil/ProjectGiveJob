@@ -183,7 +183,7 @@ MonoBehaviour:
   - {fileID: 4989852958193448078, guid: 9b07e4e0fb5480343a68974cb0727039, type: 3}
   - {fileID: 4989852958193448078, guid: 3af9039d65dad634a8cd8b526db266c4, type: 3}
   playArea: {fileID: 1550708207}
-  delayBeforeHidingCards: 1.25
+  delayBeforeHidingCards: 3
   cardSettleDelay: 1.5
 --- !u!1 &142595357
 GameObject:

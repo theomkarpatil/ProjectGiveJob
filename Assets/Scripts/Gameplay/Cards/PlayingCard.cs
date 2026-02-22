@@ -107,5 +107,11 @@ namespace Alantrix.Gameplay.Card
             cardAnimator.FlipCardToBack();
             state = CardState.IDLE;
         }
+
+        internal void ShowDealtCard()
+        {
+            cardAnimator.FlipCardToFront();
+            GetComponentInChildren<Button>().interactable = false;
+        }
     }
 }
