@@ -1,55 +1,63 @@
-using Alantrix.Gameplay.Card;
 using System.Collections;
 using UnityEngine;
+using UnityEngine.UI;
 
-public class CardAnimator : MonoBehaviour
+namespace Alantrix.Gameplay.Card
 {
-    private const string flipToFrontAnimation = "flipToFront";
-    private const string flipToBackAnimation = "flipToBack";
-    private const string hoverAnimation = "hover";
-    private const string idleTrigger = "returnToIdle";
-
-    private Animator animator;
-
-    private void Awake()
+    public class CardAnimator : MonoBehaviour
     {
-        animator = GetComponent<Animator>();
-    }
+        private const string flipToFrontAnimation = "flipToFront";
+        private const string flipToBackAnimation = "flipToBack";
+        private const string hoverAnimation = "hover";
+        private const string idleTrigger = "returnToIdle";
 
-    internal void FlipCardToFront()
-    {
-        animator.Play(flipToFrontAnimation, 0);
-        GetComponent<PlayingCard>().state = CardState.FLIPPED;
+        private Animator animator;
+        private Button button;
+        private PlayingCard playingCard;
 
-        AudioManager.instance.PlayCardFlipAudio(true);
-    }
+        private void OnEnable()
+        {
+            animator = GetComponent<Animator>();
+            button = GetComponentInChildren<Button>();
+            playingCard = GetComponent<PlayingCard>();
+        }
 
-    internal void FlipCardToBack()
-    {
-        animator.Play(flipToBackAnimation, 0);
+        internal void FlipCardToFront()
+        {
+            animator.Play(flipToFrontAnimation, 0);
+            GetComponent<PlayingCard>().state = CardState.FLIPPED;
 
-        float duration = animator.GetCurrentAnimatorClipInfo(0)[0].clip.length;
-        StartCoroutine(DelayedIdleState(duration));
+            AudioManager.instance.PlayCardFlipAudio(true);
+        }
 
-        AudioManager.instance.PlayCardFlipAudio(false);
-    }
+        internal void FlipCardToBack()
+        {
+            animator.Play(flipToBackAnimation, 0);
 
-    internal void HoverOverCard(bool stop)
-    {
-        if (!stop)
-            animator.Play(hoverAnimation, 0);
-        else
-            animator.SetTrigger(idleTrigger);
-    }
+            float duration = animator.GetCurrentAnimatorClipInfo(0)[0].clip.length;
+            StartCoroutine(DelayedIdleState(duration));
 
-    private IEnumerator DelayedIdleState(float duration)
-    {
-        yield return new WaitForSeconds(duration);
-        GetComponent<PlayingCard>().state = CardState.IDLE;
-    }
+            AudioManager.instance.PlayCardFlipAudio(false);
+        }
 
-    internal void StopAnimations()
-    {
-        animator.Play("idle");
+        internal void HoverOverCard(bool stop)
+        {
+            if (!stop)
+                animator.Play(hoverAnimation, 0);
+            else
+                animator.SetTrigger(idleTrigger);
+        }
+
+        private IEnumerator DelayedIdleState(float duration)
+        {
+            yield return new WaitForSeconds(duration);
+            playingCard.state = CardState.IDLE;
+            button.interactable = true;
+        }
+
+        internal void StopAnimations()
+        {
+            animator.Play("idle");
+        }
     }
 }

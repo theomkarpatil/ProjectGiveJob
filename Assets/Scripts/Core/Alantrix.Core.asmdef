@@ -2,13 +2,13 @@
     "name": "Core",
     "rootNamespace": "",
     "references": [],
-    "includePlatforms": [],
-    "excludePlatforms": [
+    "includePlatforms": [
         "Android",
-        "iOS",
+        "Editor",
         "WindowsStandalone32",
         "WindowsStandalone64"
     ],
+    "excludePlatforms": [],
     "allowUnsafeCode": false,
     "overrideReferences": false,
     "precompiledReferences": [],

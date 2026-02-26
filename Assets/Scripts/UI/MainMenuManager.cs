@@ -34,7 +34,7 @@ namespace Alantrix.UI
 
         private void LoadGameScene()
         {
-            SceneManager.LoadSceneAsync(1);
+            SceneManager.LoadScene(1);
             gameObject.SetActive(false);
         }
 
@@ -61,7 +61,7 @@ namespace Alantrix.UI
         {
             loadGame.value = true;
 
-            SceneManager.LoadSceneAsync(1);
+            SceneManager.LoadScene(1);
             gameObject.SetActive(false);
         }
     }

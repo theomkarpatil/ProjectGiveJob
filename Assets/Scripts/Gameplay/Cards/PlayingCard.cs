@@ -42,13 +42,9 @@ namespace Alantrix.Gameplay.Card
         // card state variables
         public CardState state;
 
-        private void Awake()
-        {
-            cardAnimator = GetComponent<CardAnimator>();
-        }
-
         private void OnEnable()
         {
+            cardAnimator = GetComponent<CardAnimator>();
             button = GetComponentInChildren<Button>();
             button.onClick.AddListener(OnCardSelected);
         }
@@ -90,6 +86,7 @@ namespace Alantrix.Gameplay.Card
             {
                 cardAnimator.FlipCardToFront();
                 CardManager.instance.OnCardSelected(this);
+                button.interactable = false;
             }
         }
 

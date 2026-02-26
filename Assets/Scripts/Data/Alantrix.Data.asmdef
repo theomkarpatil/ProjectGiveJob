@@ -6,13 +6,13 @@
         "GUID:40915d0ce9f09454e93621cc79ae1d8e",
         "GUID:08c8b1d85357b49489556e3db6c1fc4a"
     ],
-    "includePlatforms": [],
-    "excludePlatforms": [
+    "includePlatforms": [
         "Android",
-        "macOSStandalone",
+        "Editor",
         "WindowsStandalone32",
         "WindowsStandalone64"
     ],
+    "excludePlatforms": [],
     "allowUnsafeCode": false,
     "overrideReferences": false,
     "precompiledReferences": [],
